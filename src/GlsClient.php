@@ -13,6 +13,11 @@ use GlsSoapApi\Exceptions\GlsException;
 class GlsClient
 {
 
+	const TEST_URL = 'http://test.online.gls-czech.com/webservices/soap_server.php?wsdl&ver=16.12.15.01';
+	const TEST_USER = 'clientTest';
+	const TEST_PASSWORD = 'testAcount0GLS';
+	const TEST_USER_ID = '050000001';
+
 	const HU = 'https://online.gls-hungary.com/webservices/soap_server.php?wsdl&ver=18.09.12.01';
 	const SK = 'https://online.gls-slovakia.sk/webservices/soap_server.php?wsdl&ver=18.09.12.01';
 	const CZ = 'https://online.gls-czech.com/webservices/soap_server.php?wsdl&ver=18.09.12.01';
@@ -41,7 +46,7 @@ class GlsClient
 	/** @var string */
 	private $requestUrl;
 
-	public function __construct(string $userName, string $password, string $senderId, string $countryCode)
+	public function __construct(string $userName, string $password, string $senderId, string $countryCode, bool $testMode = false)
 	{
 		if (array_key_exists($countryCode, self::ALLOWED_COUNTRY_CODES)) {
 			throw new GlsException('Unsupported country code: ' . $countryCode);
@@ -49,9 +54,16 @@ class GlsClient
 			$this->requestUrl = self::ALLOWED_COUNTRY_CODES[$countryCode];
 		}
 
-		$this->userName = $userName;
-		$this->password = $password;
-		$this->senderId = $senderId;
+		if ($testMode) {
+			$this->requestUrl = self::TEST_URL;
+			$this->userName = self::TEST_USER;
+			$this->password =  self::TEST_PASSWORD;
+			$this->senderId =  self::TEST_USER_ID;
+		} else {
+			$this->userName = $userName;
+			$this->password = $password;
+			$this->senderId = $senderId;
+		}
 	}
 
 	public function send(Requests\BaseRequest $request): BaseResponse
