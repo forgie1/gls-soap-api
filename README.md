@@ -5,7 +5,7 @@
 ```php
 $client = new \GlsSoapApi\GlsClient('userName', 'password', 'senderId', 'countryCode', 'testMode');
 
-$requestData = new \GlsSoapApi\Request\Entities\RequestData();
+$requestData = new \GlsSoapApi\Requests\Entities\RequestData();
 $requestData
     ->set ....;
 

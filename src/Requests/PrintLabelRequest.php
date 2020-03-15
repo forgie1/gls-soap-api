@@ -7,8 +7,8 @@
 
 namespace GlsSoapApi\Requests;
 
-use GlsSoapApi\Entities\Responses\PrintLabelResponse;
-use GlsSoapApi\Request\Entities;
+use GlsSoapApi\Responses\PrintLabelResponse;
+use GlsSoapApi\Requests\Entities;
 
 class PrintLabelRequest extends BaseRequest
 {
@@ -54,21 +54,25 @@ class PrintLabelRequest extends BaseRequest
 			'clientref' => $this->data->getClientReference(),
 			'codamount' => $this->data->getCodAmount(),
 			'codref' => $this->data->getCodReference(),
-			'services' => $this->data->getServices(),
+			'services' => $this->data->getServiceArray(),
 			'printertemplate' => $this->data->getPrinterTemplate(),
 			'printit' => $this->data->isPrintIt(),
 			'timestamp' => (new \DateTime())->format('YmdHis'), // yyyyMMddHHmmss
-			'hash' => 'xsd:string',
+			'hash' => '',
 			'customlabel' => $this->data->isCustomLabel(),
 			'is_autoprint_pdfs' => $this->data->isAutoPrintPdfs(),
-			'gapid' => $this->data->getGaPid()
 		];
 
-		$arrayData['hash'] = $this->generateHash($arrayData);
+		if ($this->data->getGaPid()) {
+			$arrayData['gapid'] = $this->data->getGaPid();
+		}
+
+		return $arrayData;
 	}
 
 	public function getResponseClass(): string
 	{
 		return PrintLabelResponse::class;
 	}
+
 }

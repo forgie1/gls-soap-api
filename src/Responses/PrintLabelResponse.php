@@ -5,7 +5,7 @@
  * Copyright © 2020 Ján Forgáč <forgac@artfocus.cz>
  */
 
-namespace GlsSoapApi\Entities\Responses;
+namespace GlsSoapApi\Responses;
 
 class PrintLabelResponse extends BaseResponse
 {

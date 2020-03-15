@@ -5,7 +5,7 @@
  * Copyright © 2020 Ján Forgáč <forgac@artfocus.cz>
  */
 
-namespace GlsSoapApi\Request\Entities;
+namespace GlsSoapApi\Requests\Entities;
 
 class Service
 {

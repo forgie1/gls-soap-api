@@ -16,20 +16,4 @@ abstract class BaseRequest
 
 	abstract public function getResponseClass(): string;
 
-	protected function generateHash(array $data): string
-	{
-		$hashBase = '';
-		foreach($data as $key => $value) {
-			if ($key != 'services'
-				&& $key != 'hash'
-				&& $key != 'timestamp'
-				&& $key != 'printit'
-				&& $key != 'printertemplate'
-				&& $key != 'customlabel') {
-				$hashBase .= $value;
-			}
-		}
-		return sha1($hashBase);
-	}
-
 }

@@ -7,8 +7,9 @@
 
 namespace GlsSoapApi;
 
-use GlsSoapApi\Entities\Responses\BaseResponse;
+use GlsSoapApi\Responses\BaseResponse;
 use GlsSoapApi\Exceptions\GlsException;
+use Tracy\Debugger;
 
 class GlsClient
 {
@@ -31,7 +32,7 @@ class GlsClient
 		'CZ' => self::CZ,
 		'RO' => self::RO,
 		'SI' => self::SI,
-		'HR' =>self::HR,
+		'HR' => self::HR,
 	];
 
 	/** @var string */
@@ -46,19 +47,24 @@ class GlsClient
 	/** @var string */
 	private $requestUrl;
 
+	/** @var bool */
+	private $testMode;
+
 	public function __construct(string $userName, string $password, string $senderId, string $countryCode, bool $testMode = false)
 	{
-		if (array_key_exists($countryCode, self::ALLOWED_COUNTRY_CODES)) {
+		if (!array_key_exists($countryCode, self::ALLOWED_COUNTRY_CODES)) {
 			throw new GlsException('Unsupported country code: ' . $countryCode);
 		} else {
 			$this->requestUrl = self::ALLOWED_COUNTRY_CODES[$countryCode];
 		}
 
+		$this->testMode = $testMode;
+
 		if ($testMode) {
 			$this->requestUrl = self::TEST_URL;
 			$this->userName = self::TEST_USER;
-			$this->password =  self::TEST_PASSWORD;
-			$this->senderId =  self::TEST_USER_ID;
+			$this->password = self::TEST_PASSWORD;
+			$this->senderId = self::TEST_USER_ID;
 		} else {
 			$this->userName = $userName;
 			$this->password = $password;
@@ -69,14 +75,43 @@ class GlsClient
 	public function send(Requests\BaseRequest $request): BaseResponse
 	{
 		$soapClient = new \SoapClient(null, [
+			'trace' => true,
+			'location' => $this->requestUrl,
+			'uri' => $request->getSoapAction(),
 			'connection_timeout' => 15,
 			'exceptions' => true,
 		]);
 
-		$soapClient->__setLocation($this->requestUrl);
-		$responseArray = $soapClient->__soapCall($request->getSoapAction(), $this->getAuthArray() + $request->getArrayData());
+		try {
+			$data = $this->getAuthArray() + $request->getArrayData();
+			$data['hash'] = $this->generateHash($data);
+			$responseArray = $soapClient->__soapCall($request->getSoapAction(), $data);
+		} catch (\SoapFault $e) {
+			if (
+				$soapClient->__getLastResponse() === 'Database connection error!' ||
+				$soapClient->__getLastResponse() === 'Unable to store data, please try again later'
+			) {
+				$responseArray['successfull'] = false;
+				$responseArray['errcode'] = 1;
+				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
+			} else {
+				Debugger::log($soapClient->__getLastRequest());
+				Debugger::log($soapClient->__getLastResponse());
+				Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
+				Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
 
-		return new ($request->getResponseClass())($responseArray);
+				trigger_error($e->getMessage() . ' -- for more see log');
+			}
+		}
+
+		if ($this->testMode) {
+			Debugger::barDump($responseArray);
+			Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
+			Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
+		}
+
+		$class = $request->getResponseClass();
+		return new $class((array)$responseArray);
 	}
 
 	private function getAuthArray(): array
@@ -84,8 +119,27 @@ class GlsClient
 		return [
 			'username' => $this->userName,
 			'password' => $this->password,
-			'senderid' => $this->senderId
+			'senderid' => $this->senderId,
 		];
+	}
+
+	private function generateHash(array $data): string
+	{
+		$hashBase = '';
+		foreach ($data as $key => $value) {
+			if ($key !== 'services'
+				&& $key !== 'hash'
+				&& $key !== 'timestamp'
+				&& $key !== 'printit'
+				&& $key !== 'printertemplate'
+				&& $key !== 'customlabel'
+				&& $key !== 'is_autoprint_pdfs') {
+				$hashBase .= $value;
+			}
+		}
+
+		$hashBase = preg_replace('~\r\n|\r|\n~', '', $hashBase);
+		return sha1($hashBase);
 	}
 
 }

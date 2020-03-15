@@ -7,7 +7,7 @@
 
 namespace GlsSoapApi\Requests;
 
-use GlsSoapApi\Entities\Responses\DeleteLabelsResponse;
+use GlsSoapApi\Responses\DeleteLabelsResponse;
 
 class DeleteLabelsRequest extends BaseRequest
 {
@@ -47,4 +47,5 @@ class DeleteLabelsRequest extends BaseRequest
 	{
 		return DeleteLabelsResponse::class;
 	}
+
 }

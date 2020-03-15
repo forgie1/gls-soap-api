@@ -5,7 +5,7 @@
  * Copyright © 2020 Ján Forgáč <forgac@artfocus.cz>
  */
 
-namespace GlsSoapApi\Request\Entities;
+namespace GlsSoapApi\Requests\Entities;
 
 class RequestData
 {
@@ -28,10 +28,10 @@ class RequestData
 	/** @var string|null client reference */
 	private $clientReference = '';
 
-	/** @var float|null COD amount */
+	/** @var float|null COD amount in delivery destination country currency */
 	private $codAmount;
 
-	/** @var string|null COD reference – used if COD amount is set */
+	/** @var string|null COD reference – used if COD amount is set = variable symbol */
 	private $codReference = '';
 
 	/** @var Service[] */
@@ -194,6 +194,22 @@ class RequestData
 	{
 		$this->codReference = $codReference;
 		return $this;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getServiceArray(): array
+	{
+		$array = [];
+		foreach ($this->services as $service) {
+			$array[] = [
+				'code' => $service->getCode(),
+				'info' => $service->getInfo(),
+				];
+		}
+
+		return $array;
 	}
 
 	/**

@@ -7,7 +7,7 @@
 
 namespace GlsSoapApi\Requests;
 
-use GlsSoapApi\Entities\Responses\ModifyCodResponse;
+use GlsSoapApi\Responses\ModifyCodResponse;
 
 class ModifyCodRequest extends BaseRequest
 {
@@ -47,4 +47,5 @@ class ModifyCodRequest extends BaseRequest
 	{
 		return ModifyCodResponse::class;
 	}
+
 }

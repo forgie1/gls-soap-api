@@ -5,7 +5,7 @@
  * Copyright © 2020 Ján Forgáč <forgac@artfocus.cz>
  */
 
-namespace GlsSoapApi\Entities\Responses;
+namespace GlsSoapApi\Responses;
 
 class BaseResponse
 {
@@ -21,7 +21,7 @@ class BaseResponse
 
 	public function __construct(array $data)
 	{
-		$this->success = $data['successfull'];
+		$this->success = $data['successfull'] ?? false;
 		$this->errorCode = $data['errcode'] ?? null;
 		$this->errorDesc = $data['errdesc'] ?? null;
 	}
