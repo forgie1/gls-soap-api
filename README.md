@@ -22,6 +22,11 @@ $response = $client->send($request);
 
 ### TestMode
 
-If `GlsClient()` is created with `$testMode = true` credentials and country are ignored, request is made to test server.
+If `GlsClient()` is created with `$testMode = GlsClient::TEST_MODE_TEST_REQUEST` credentials and country are ignored, request is made to test server and result is logged by tracy.
+
+**Available test modes:**
+
+* test request: \GlsSoapApi\GlsClient::TEST_MODE_TEST_REQUEST -- this also turns on the debug
+* debug:  \GlsSoapApi\GlsClient::TEST_MODE_DEBUG -- use this to debug production requests
 
 

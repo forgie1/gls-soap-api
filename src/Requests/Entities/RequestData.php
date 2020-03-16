@@ -25,7 +25,7 @@ class RequestData
 	/** @var string|null content of the parcel – info printed on label */
 	private $contentDescription;
 
-	/** @var string|null client reference */
+	/** @var string|null client reference -- nepovinná položka pro Vaši evidenci zákazníku*/
 	private $clientReference = '';
 
 	/** @var float|null COD amount in delivery destination country currency */

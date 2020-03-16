@@ -14,6 +14,9 @@ use Tracy\Debugger;
 class GlsClient
 {
 
+	const TEST_MODE_TEST_REQUEST = 1;
+	const TEST_MODE_DEBUG = 2;
+
 	const TEST_URL = 'http://test.online.gls-czech.com/webservices/soap_server.php?wsdl&ver=16.12.15.01';
 	const TEST_USER = 'clientTest';
 	const TEST_PASSWORD = 'testAcount0GLS';
@@ -60,7 +63,7 @@ class GlsClient
 
 		$this->testMode = $testMode;
 
-		if ($testMode) {
+		if ($testMode & self::TEST_MODE_TEST_REQUEST) {
 			$this->requestUrl = self::TEST_URL;
 			$this->userName = self::TEST_USER;
 			$this->password = self::TEST_PASSWORD;
