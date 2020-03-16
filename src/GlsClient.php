@@ -95,8 +95,10 @@ class GlsClient
 				$responseArray['errcode'] = 1;
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
 			} else {
+				Debugger::log($data ?? null);
 				Debugger::log($soapClient->__getLastRequest());
 				Debugger::log($soapClient->__getLastResponse());
+				Debugger::barDump($data ?? null, 'data');
 				Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
 				Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
 
@@ -105,8 +107,9 @@ class GlsClient
 		}
 
 		if ($this->testMode) {
-			Debugger::barDump($responseArray);
+			Debugger::barDump($data ?? null, 'data');
 			Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
+			Debugger::barDump($responseArray ?? null, 'response');
 			Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
 		}
 
