@@ -53,7 +53,7 @@ class GlsClient
 	/** @var bool */
 	private $testMode;
 
-	public function __construct(string $userName, string $password, string $senderId, string $countryCode, bool $testMode = false)
+	public function __construct(string $userName, string $password, string $senderId, string $countryCode, int $testMode = 0)
 	{
 		if (!array_key_exists($countryCode, self::ALLOWED_COUNTRY_CODES)) {
 			throw new GlsException('Unsupported country code: ' . $countryCode);
