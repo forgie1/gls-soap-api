@@ -64,7 +64,7 @@ class RequestData
 	 * @param Address $sender
 	 * @return $this
 	 */
-	public function setSender($sender)
+	public function setSender(Address $sender)
 	{
 		$this->sender = $sender;
 		return $this;
@@ -82,7 +82,7 @@ class RequestData
 	 * @param Address $consignee
 	 * @return $this
 	 */
-	public function setConsignee($consignee)
+	public function setConsignee(Address $consignee)
 	{
 		$this->consignee = $consignee;
 		return $this;
@@ -100,7 +100,7 @@ class RequestData
 	 * @param int $parcelCount
 	 * @return $this
 	 */
-	public function setParcelCount($parcelCount)
+	public function setParcelCount(int $parcelCount)
 	{
 		$this->parcelCount = $parcelCount;
 		return $this;
@@ -118,7 +118,7 @@ class RequestData
 	 * @param \DateTime $pickupDate
 	 * @return $this
 	 */
-	public function setPickupDate($pickupDate)
+	public function setPickupDate(\DateTime $pickupDate)
 	{
 		$this->pickupDate = $pickupDate;
 		return $this;
@@ -136,7 +136,7 @@ class RequestData
 	 * @param string|null $contentDescription
 	 * @return $this
 	 */
-	public function setContentDescription($contentDescription)
+	public function setContentDescription(?string $contentDescription)
 	{
 		$this->contentDescription = $contentDescription;
 		return $this;
@@ -154,7 +154,7 @@ class RequestData
 	 * @param string|null $clientReference
 	 * @return $this
 	 */
-	public function setClientReference($clientReference)
+	public function setClientReference(?string $clientReference)
 	{
 		$this->clientReference = $clientReference;
 		return $this;
@@ -172,7 +172,7 @@ class RequestData
 	 * @param float|null $codAmount
 	 * @return $this
 	 */
-	public function setCodAmount($codAmount)
+	public function setCodAmount(?float $codAmount)
 	{
 		$this->codAmount = $codAmount;
 		return $this;
@@ -190,7 +190,7 @@ class RequestData
 	 * @param string|null $codReference
 	 * @return $this
 	 */
-	public function setCodReference($codReference)
+	public function setCodReference(?string $codReference)
 	{
 		$this->codReference = $codReference;
 		return $this;
@@ -206,7 +206,7 @@ class RequestData
 			$array[] = [
 				'code' => $service->getCode(),
 				'info' => $service->getInfo(),
-				];
+			];
 		}
 
 		return $array;
@@ -224,7 +224,7 @@ class RequestData
 	 * @param Service[] $services
 	 * @return $this
 	 */
-	public function setServices($services)
+	public function setServices(array $services)
 	{
 		$this->services = $services;
 		return $this;
@@ -242,7 +242,7 @@ class RequestData
 	 * @param string $printerTemplate
 	 * @return $this
 	 */
-	public function setPrinterTemplate($printerTemplate)
+	public function setPrinterTemplate(string $printerTemplate)
 	{
 		$this->printerTemplate = $printerTemplate;
 		return $this;
@@ -260,7 +260,7 @@ class RequestData
 	 * @param bool $printIt
 	 * @return $this
 	 */
-	public function setPrintIt($printIt)
+	public function setPrintIt(bool $printIt)
 	{
 		$this->printIt = $printIt;
 		return $this;
@@ -278,7 +278,7 @@ class RequestData
 	 * @param bool $customLabel
 	 * @return $this
 	 */
-	public function setCustomLabel($customLabel)
+	public function setCustomLabel(bool $customLabel)
 	{
 		$this->customLabel = $customLabel;
 		return $this;
@@ -296,7 +296,7 @@ class RequestData
 	 * @param bool $autoPrintPdfs
 	 * @return $this
 	 */
-	public function setAutoPrintPdfs($autoPrintPdfs)
+	public function setAutoPrintPdfs(bool $autoPrintPdfs)
 	{
 		$this->autoPrintPdfs = $autoPrintPdfs;
 		return $this;
@@ -314,7 +314,7 @@ class RequestData
 	 * @param string $gaPid
 	 * @return $this
 	 */
-	public function setGaPid($gaPid)
+	public function setGaPid(string $gaPid)
 	{
 		$this->gaPid = $gaPid;
 		return $this;

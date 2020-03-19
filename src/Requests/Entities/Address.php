@@ -46,7 +46,7 @@ class Address
 	 * @param string $name
 	 * @return $this
 	 */
-	public function setName($name)
+	public function setName(string $name)
 	{
 		$this->name = $name;
 		return $this;
@@ -64,7 +64,7 @@ class Address
 	 * @param string $address
 	 * @return $this
 	 */
-	public function setAddress($address)
+	public function setAddress(string $address)
 	{
 		$this->address = $address;
 		return $this;
@@ -82,7 +82,7 @@ class Address
 	 * @param string $city
 	 * @return $this
 	 */
-	public function setCity($city)
+	public function setCity(string $city)
 	{
 		$this->city = $city;
 		return $this;
@@ -100,7 +100,7 @@ class Address
 	 * @param string $zipCode
 	 * @return $this
 	 */
-	public function setZipCode($zipCode)
+	public function setZipCode(string $zipCode)
 	{
 		$this->zipCode = $zipCode;
 		return $this;
@@ -118,7 +118,7 @@ class Address
 	 * @param string $country
 	 * @return $this
 	 */
-	public function setCountry($country)
+	public function setCountry(string $country)
 	{
 		$this->country = $country;
 		return $this;
@@ -136,7 +136,7 @@ class Address
 	 * @param string|null $contact
 	 * @return $this
 	 */
-	public function setContact($contact)
+	public function setContact(?string $contact)
 	{
 		$this->contact = $contact;
 		return $this;
@@ -154,7 +154,7 @@ class Address
 	 * @param string|null $phone
 	 * @return $this
 	 */
-	public function setPhone($phone)
+	public function setPhone(?string $phone)
 	{
 		$this->phone = $phone;
 		return $this;
@@ -172,7 +172,7 @@ class Address
 	 * @param string|null $email
 	 * @return $this
 	 */
-	public function setEmail($email)
+	public function setEmail(?string $email)
 	{
 		$this->email = $email;
 		return $this;

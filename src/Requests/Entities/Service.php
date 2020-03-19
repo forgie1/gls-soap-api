@@ -28,7 +28,7 @@ class Service
 	 * @param string $code
 	 * @return $this
 	 */
-	public function setCode($code)
+	public function setCode(string $code)
 	{
 		$this->code = $code;
 		return $this;
@@ -46,7 +46,7 @@ class Service
 	 * @param string $info
 	 * @return $this
 	 */
-	public function setInfo($info)
+	public function setInfo(string $info)
 	{
 		$this->info = $info;
 		return $this;
