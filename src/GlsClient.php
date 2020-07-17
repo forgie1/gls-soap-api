@@ -29,7 +29,7 @@ class GlsClient
 	const SI = 'https://online.gls-slovenia.com/webservices/soap_server.php?wsdl&ver=18.09.12.01';
 	const HR = 'https://online.gls-croatia.com/webservices/soap_server.php?wsdl&ver=18.09.12.01';
 
-	const ALLOWED_COUNTRY_CODES = [
+	const ALLOWED_ENDPOINTS = [
 		'HU' => self::HU,
 		'SK' => self::SK,
 		'CZ' => self::CZ,
@@ -53,12 +53,12 @@ class GlsClient
 	/** @var bool */
 	private $testMode;
 
-	public function __construct(string $userName, string $password, string $senderId, string $countryCode, int $testMode = 0)
+	public function __construct(string $endPoint, string $userName, string $password, string $senderId, int $testMode = 0)
 	{
-		if (!array_key_exists($countryCode, self::ALLOWED_COUNTRY_CODES)) {
-			throw new GlsException('Unsupported country code: ' . $countryCode);
+		if (!array_key_exists($endPoint, self::ALLOWED_ENDPOINTS)) {
+			throw new GlsException('Unsupported endpoint: ' . $endPoint);
 		} else {
-			$this->requestUrl = self::ALLOWED_COUNTRY_CODES[$countryCode];
+			$this->requestUrl = self::ALLOWED_ENDPOINTS[$endPoint];
 		}
 
 		$this->testMode = $testMode;

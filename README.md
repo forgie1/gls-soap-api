@@ -2,8 +2,10 @@
 
 ## Usage
 
+For Allowed endpoints see: `\GlsSoapApi\GlsClient::ALLOWED_ENDPOINTS`
+
 ```php
-$client = new \GlsSoapApi\GlsClient('userName', 'password', 'senderId', 'countryCode', 'testMode');
+$client = new \GlsSoapApi\GlsClient('endPoint', 'userName', 'password', 'senderId', 'testMode');
 
 $requestData = new \GlsSoapApi\Requests\Entities\RequestData();
 $requestData
