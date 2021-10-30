@@ -14,7 +14,7 @@ class PrintLabelResponse extends BaseResponse
 	private $parcelNumbers;
 
 	/** @var string[] */
-	private $parcelNumbersWithCheckDigit; // return list of the parcel numbers with checkdigit
+	private $parcelNumbersWithCheckDigit; // return list of the parcel numbers with check digit
 
 	/** @var string|null */
 	private $pdfData; // pdf data to print or display pdf. Encoded with base64

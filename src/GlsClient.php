@@ -9,7 +9,6 @@ namespace GlsSoapApi;
 
 use GlsSoapApi\Responses\BaseResponse;
 use GlsSoapApi\Exceptions\GlsException;
-use Tracy\Debugger;
 
 class GlsClient
 {
@@ -53,7 +52,10 @@ class GlsClient
 	/** @var bool */
 	private $testMode;
 
-	public function __construct(string $endPoint, string $userName, string $password, string $senderId, int $testMode = 0)
+	/** @var GlsLoggerI|null */
+	private $logger;
+
+	public function __construct(string $endPoint, string $userName, string $password, string $senderId, bool $testMode = false)
 	{
 		if (!array_key_exists($endPoint, self::ALLOWED_ENDPOINTS)) {
 			throw new GlsException('Unsupported endpoint: ' . $endPoint);
@@ -75,6 +77,16 @@ class GlsClient
 		}
 	}
 
+	/**
+	 * @param GlsLoggerI|null $logger
+	 * @return $this
+	 */
+	public function setLogger(?GlsLoggerI $logger)
+	{
+		$this->logger = $logger;
+		return $this;
+	}
+
 	public function send(Requests\BaseRequest $request): BaseResponse
 	{
 		$soapClient = new \SoapClient(null, [
@@ -88,6 +100,8 @@ class GlsClient
 		try {
 			$data = $this->getAuthArray() + $request->getArrayData();
 			$data['hash'] = $this->generateHash($data);
+			$this->logger?->logg('request data', $data);
+
 			$responseArray = $soapClient->__soapCall($request->getSoapAction(), $data);
 		} catch (\SoapFault $e) {
 			if (
@@ -98,22 +112,19 @@ class GlsClient
 				$responseArray['errcode'] = 1;
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
 			} else {
-				Debugger::log($data ?? null);
-				Debugger::log($soapClient->__getLastRequest());
-				Debugger::log($soapClient->__getLastResponse());
-				Debugger::barDump($data ?? null, 'data');
-				Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
-				Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
-
+				$this->logger?->logg('data', $data ?? null);
+				$this->logger?->logg('last request', $soapClient->__getLastRequest());
+				$this->logger?->logg('last response', $soapClient->__getLastResponse());
 				trigger_error($e->getMessage() . ' -- for more see log');
 			}
 		}
 
 		if ($this->testMode) {
-			Debugger::barDump($data ?? null, 'data');
-			Debugger::barDump($soapClient->__getLastRequest(), 'request', ['truncate' => 3500]);
-			Debugger::barDump($responseArray ?? null, 'response');
-			Debugger::barDump($soapClient->__getLastResponse(), 'response', ['truncate' => 3500]);
+			$this->logger?->logg('data', $data ?? null);
+			$this->logger?->logg('last request', $soapClient->__getLastRequest());
+			$this->logger?->logg('last response', $soapClient->__getLastResponse());
+			$this->logger?->logg('response array', $responseArray ?? null);
+
 		}
 
 		$class = $request->getResponseClass();
