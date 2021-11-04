@@ -112,18 +112,18 @@ class GlsClient
 				$responseArray['errcode'] = 1;
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
 			} else {
-				$this->logger?->logg('data', $data ?? null);
-				$this->logger?->logg('last request', $soapClient->__getLastRequest());
-				$this->logger?->logg('last response', $soapClient->__getLastResponse());
+				$this->logger?->logg('data', $data ?? [null]);
+				$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
+				$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
 				trigger_error($e->getMessage() . ' -- for more see log');
 			}
 		}
 
 		if ($this->testMode) {
-			$this->logger?->logg('data', $data ?? null);
-			$this->logger?->logg('last request', $soapClient->__getLastRequest());
-			$this->logger?->logg('last response', $soapClient->__getLastResponse());
-			$this->logger?->logg('response array', $responseArray ?? null);
+			$this->logger?->logg('data', $data ?? []);
+			$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
+			$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
+			$this->logger?->logg('response array', $responseArray ? (is_array($responseArray) ? $responseArray : [$responseArray]) : [null]);
 
 		}
 
