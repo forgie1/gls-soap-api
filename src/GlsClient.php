@@ -12,10 +12,6 @@ use GlsSoapApi\Exceptions\GlsException;
 
 class GlsClient
 {
-
-	const TEST_MODE_TEST_REQUEST = 1;
-	const TEST_MODE_DEBUG = 2;
-
 	const TEST_URL = 'http://test.online.gls-czech.com/webservices/soap_server.php?wsdl&ver=16.12.15.01';
 	const TEST_USER = 'clientTest';
 	const TEST_PASSWORD = 'testAcount0GLS';
@@ -49,9 +45,6 @@ class GlsClient
 	/** @var string */
 	private $requestUrl;
 
-	/** @var bool */
-	private $testMode;
-
 	/** @var GlsLoggerI|null */
 	private $logger;
 
@@ -63,9 +56,7 @@ class GlsClient
 			$this->requestUrl = self::ALLOWED_ENDPOINTS[$endPoint];
 		}
 
-		$this->testMode = $testMode;
-
-		if ($testMode & self::TEST_MODE_TEST_REQUEST) {
+		if ($testMode) {
 			$this->requestUrl = self::TEST_URL;
 			$this->userName = self::TEST_USER;
 			$this->password = self::TEST_PASSWORD;
@@ -112,20 +103,18 @@ class GlsClient
 				$responseArray['errcode'] = 1;
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
 			} else {
-				$this->logger?->logg('data', $data ?? [null]);
-				$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
-				$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
-				trigger_error($e->getMessage() . ' -- for more see log');
+				if ($this->logger) {
+					trigger_error($e->getMessage() . ' -- for more see the log');
+				} else {
+					trigger_error($e->getMessage() . ' -- for more set the logger');
+				}
 			}
 		}
 
-		if ($this->testMode) {
-			$this->logger?->logg('data', $data ?? []);
-			$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
-			$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
-			$this->logger?->logg('response array', $responseArray ? (is_array($responseArray) ? $responseArray : [$responseArray]) : [null]);
-
-		}
+		$this->logger?->logg('data', $data ?? []);
+		$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
+		$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
+		$this->logger?->logg('response array', $responseArray ? (is_array($responseArray) ? $responseArray : [$responseArray]) : [null]);
 
 		$class = $request->getResponseClass();
 		return new $class((array)$responseArray);
