@@ -88,12 +88,19 @@ class GlsClient
 			'exceptions' => true,
 		]);
 
+		$this->logger?->logg('location', [$this->requestUrl]);
+		$this->logger?->logg('action', [$request->getSoapAction()]);
+
 		try {
 			$data = $this->getAuthArray() + $request->getArrayData();
 			$data['hash'] = $this->generateHash($data);
 			$this->logger?->logg('request data', $data);
 
 			$responseArray = $soapClient->__soapCall($request->getSoapAction(), $data);
+
+			$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
+			$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
+			$this->logger?->logg('response array', $responseArray ? (is_array($responseArray) ? $responseArray : [$responseArray]) : [null]);
 		} catch (\SoapFault $e) {
 			if (
 				$soapClient->__getLastResponse() === 'Database connection error!' ||
@@ -102,7 +109,13 @@ class GlsClient
 				$responseArray['successfull'] = false;
 				$responseArray['errcode'] = 1;
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
+
+				$this->logger->logg('error', ['Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova']);
 			} else {
+				$this->logger?->logg('error', [$e->getMessage()]);
+				$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
+				$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
+
 				if ($this->logger) {
 					trigger_error($e->getMessage() . ' -- for more see the log');
 				} else {
@@ -110,11 +123,6 @@ class GlsClient
 				}
 			}
 		}
-
-		$this->logger?->logg('data', $data ?? []);
-		$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
-		$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
-		$this->logger?->logg('response array', $responseArray ? (is_array($responseArray) ? $responseArray : [$responseArray]) : [null]);
 
 		$class = $request->getResponseClass();
 		return new $class((array)$responseArray);
