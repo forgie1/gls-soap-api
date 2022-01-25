@@ -111,8 +111,14 @@ class GlsClient
 				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova';
 
 				$this->logger->logg('error', ['Chyba na straně GLS (' . $soapClient->__getLastResponse() . '). Zkuste to prosím znova']);
+			} elseif ($e->getMessage() === 'Could not connect to host') {
+				$responseArray['successfull'] = false;
+				$responseArray['errcode'] = 1;
+				$responseArray['errdesc'] = 'Chyba na straně GLS (' . $e->getMessage() . '). Zkuste to prosím znova';
+
+				$this->logger->logg('error', ['Chyba na straně GLS (' . $e->getMessage() . '). Zkuste to prosím znova']);
 			} else {
-				$this->logger?->logg('error', [$e->getMessage()]);
+				$this->logger?->logg('error', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 				$this->logger?->logg('last request', [$soapClient->__getLastRequest()]);
 				$this->logger?->logg('last response', [$soapClient->__getLastResponse()]);
 
