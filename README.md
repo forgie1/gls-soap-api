@@ -1,5 +1,11 @@
 # SOAP API for GLS services
 
+## APi name and Documentation:
+
+**GLS Online Api v.18.09.12.01**
+
+See PDF document in `doc` directory.
+
 ## Usage
 
 For Allowed endpoints see: `\GlsSoapApi\GlsClient::ALLOWED_ENDPOINTS`
