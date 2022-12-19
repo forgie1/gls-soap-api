@@ -13,10 +13,10 @@ use GlsSoapApi\Requests\Entities;
 class PrintLabelRequest extends BaseRequest
 {
 
-	/** @var Entities\RequestData*/
+	/** @var Entities\PrintLabelRequestData*/
 	private $data;
 
-	public function __construct(Entities\RequestData $data)
+	public function __construct(Entities\PrintLabelRequestData $data)
 	{
 		$this->data = $data;
 	}

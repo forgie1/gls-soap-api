@@ -7,7 +7,7 @@
 
 namespace GlsSoapApi\Requests\Entities;
 
-class RequestData
+class PrintLabelRequestData
 {
 
 	/** @var Address */
